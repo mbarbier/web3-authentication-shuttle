@@ -1,5 +1,6 @@
 import './App.css';
 import { api } from './back/api';
+import { fromUtf8 } from './back/utils';
 
 function App() {
 
@@ -22,15 +23,18 @@ function App() {
     const from = accounts[0] as string;
 
     let nonce = await api().getNonce(from);
+    // let nonceHex = fromUtf8(nonce);
+    // console.log("nonceHex: " + nonceHex);
 
-    // This hex is ascii for 'hello world'
-    const message = '0x68656c6c6f20776f726c64'
-    const params = [message, from]
+    const params = [nonce, from]
     let signature = await window.ethereum.request({
       method: 'personal_sign',
       params
     });
     console.log("Signature => " + signature);
+    
+    let response = await api().authenticate(from, nonce, signature);
+    console.log(response);
   }
 
   if (window.ethereum) {
