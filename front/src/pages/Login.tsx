@@ -47,11 +47,13 @@ export const Login: FC = () => {
                 showMessage("Authentication failed", "error");
             }
 
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
+            let msg = "An unexpected error happened. " + (e.message ? e.message : "");
             if (e instanceof ApiError) {
-                showMessage(e.message, "error");
+                msg = e.message;
             }
+            showMessage(msg, "error");
         }
     }
 
